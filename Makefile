@@ -8,6 +8,14 @@ test:
 	@echo $(TAG)Running tests$(END)
 	PYTHONPATH=. py.test tests
 
+test-node:
+	@echo $(TAG)Running tests$(END)
+	PYTHONPATH=. py.test tests/test_node.py
+	
+test-list:
+	@echo $(TAG)Running tests$(END)
+	PYTHONPATH=. py.test tests/test_list.py
+
 test-cov:
 	@echo $(TAG)Running tests with coverage$(END)
 	PYTHONPATH=. py.test --cov=$(PACKAGE) tests --cov-report term-missing

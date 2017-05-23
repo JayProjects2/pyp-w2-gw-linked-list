@@ -1,4 +1,5 @@
 from .interface import AbstractLinkedList
+from .node import Node
 
 
 class LinkedList(AbstractLinkedList):
@@ -7,34 +8,106 @@ class LinkedList(AbstractLinkedList):
     """
 
     def __init__(self, elements=None):
-        pass
+        self.elements = []
+        self.start = None
+        self.end = None
+        if elements:
+            for elem in elements:
+                self.append(elem)
 
     def __str__(self):
-        pass
+        return "{}".format([item.elem for item in self])
 
     def __len__(self):
-        pass
+        count = 0
+        for elem in self:
+            count += 1
+        return count
 
     def __iter__(self):
-        pass
+        elem = self.start
+        while elem:
+            yield elem
+            elem = elem.next
+        raise StopIteration()
 
     def __getitem__(self, index):
-        pass
+        if index < 0:
+            index = (len(self) - abs(index))
+        if index >= len(self):
+            raise IndexError()
+        count = 0
+        for elem in self:
+            if count == index:
+                return elem
+            else:
+                count += 1
 
     def __add__(self, other):
-        pass
+        new = LinkedList([elem.elem for elem in self])
+        for item in other:
+            new.append(item.elem)
+        return new
 
     def __iadd__(self, other):
-        pass
+        for elem in other:
+            self.append(elem.elem)
+        return self
 
     def __eq__(self, other):
-        pass
+        # If both are empty (None), it has to be equal...
+        if self.start is None and other.start is None:
+            return True
+        # This way, since both aren't None, if either of them is None, we stop here.
+        elif other.start is None or self.start is None:
+            return False
+        elem1 = self.start
+        elem2 = other.start
+
+        if len(self) == len(other):
+            while True:
+                if elem1.elem != elem2.elem:
+                    return False
+                if elem1.next is None:
+                    return True
+                elem1 = elem1.next
+                elem2 = elem2.next
+        return False
+
+    def __ne__(self, other):
+        return not self == other
 
     def append(self, elem):
-        pass
+        node = Node(elem)
+        if self.start is None:
+            self.start = node
+            self.end = self.start
+            return self.start
+
+        self.end.next = node
+        self.end = node
 
     def count(self):
-        pass
+        return len(self)
+
 
     def pop(self, index=None):
-        pass
+        if index is None:
+            index = (len(self) - 1)
+        if len(self) == 0 or index >= len(self):
+            raise IndexError
+        if index == 0:
+            elem = self.start.elem
+            self.start = self.start.next
+            return elem
+        # elif none of the above, just go through regular, or use index = len(self)-1
+        node = self.start
+        hold = None
+        count = 0
+        while True: 
+            if count == index:
+                hold.next = node.next
+                return node.elem
+            hold = node
+            node = node.next
+            count += 1
