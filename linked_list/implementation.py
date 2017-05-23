@@ -94,13 +94,15 @@ class LinkedList(AbstractLinkedList):
     def pop(self, index=None):
         if index is None:
             index = (len(self) - 1)
+        if index < 0:
+            index = len(self) - abs(index)
         if len(self) == 0 or index >= len(self):
             raise IndexError
         if index == 0:
             elem = self.start.elem
             self.start = self.start.next
             return elem
-        # elif none of the above, just go through regular, or use index = len(self)-1
+        
         node = self.start
         hold = None
         count = 0
